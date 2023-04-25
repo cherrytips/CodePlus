@@ -1,123 +1,53 @@
-# This code fails.
+# This code has been copied.
+# This code occurs Time Limit Exceed.
 import sys
 readline = sys.stdin.readline
 
-N, M = map(int, readline().split())
-paper = list(list(map(int, readline().split())) for _ in range(N))
-max_res = 0
+dx = [0, 0, 1, -1]
+dy = [1, -1, 0, 0]
+n, m = map(int, readline().split())
+a = [list(map(int, readline().split())) for _ in range(n)]
+c = [[False]*m for _ in range(n)]
 
 
-def get_sum(yi, xi):
-  temp = 0
-  for i in range(4):
-    if yi[i] >= N or xi[i] >= M:
-      return 0
-    temp += paper[yi[i]][xi[i]]
-
-  return temp
-
-
-def a(y, x):  # 일자
-  res = []
-  yi = [y, y, y, y]
-  xi = [x, x+1, x+2, x+3]
-  res.append(get_sum(yi, xi))  # 원본
-
-  yi = [y, y+1, y+2, y+3]
-  xi = [x, x, x, x]
-  res.append(get_sum(yi, xi))  # 90도 회전
-
-  return max(res)
+def go(x, y, sum, cnt):
+  if cnt == 4:
+    global ans
+    if ans < sum:
+      ans = sum
+    return
+  if x < 0 or x >= n or y < 0 or y >= m:
+    return
+  if c[x][y]:
+    return
+  c[x][y] = True
+  for k in range(4):
+    go(x+dx[k], y+dy[k], sum+a[x][y], cnt+1)
+  c[x][y] = False
 
 
-def b(y, x):  # 사각형
-  yi = [y, y, y+1, y+1]
-  xi = [x, x+1, x, x+1]
-  res = get_sum(yi, xi)  # 원본만 필요
-
-  return res
-
-
-def c(y, x):  # L 자
-  res = []
-  yi = [y, y+1, y+2, y+2]
-  xi = [x, x, x, x+1]
-  res.append(get_sum(yi, xi))  # 원본
-
-  yi = [y, y+1, y+2, y+2]
-  xi = [x, x, x, x-1]
-  res.append(get_sum(yi, xi))  # 좌우 대칭
-
-  yi = [y, y+1, y+2, y]
-  xi = [x, x, x, x+1]
-  res.append(get_sum(yi, xi))  # 상하 대칭
-
-  yi = [y, y, y+1, y+2]
-  xi = [x, x+1, x+1, x+1]
-  res.append(get_sum(yi, xi))  # 상하 좌우 대칭
-
-  yi = [y, y, y, y-1]
-  xi = [x, x+1, x+2, x+2]
-  res.append(get_sum(yi, xi))  # 좌측 90도 회전
-
-  yi = [y, y, y, y+1]
-  xi = [x, x+1, x+2, x]
-  res.append(get_sum(yi, xi))  # 우측 90도 회전
-
-  yi = [y, y+1, y+1, y+1]
-  xi = [x, x, x+1, x+2]
-  res.append(get_sum(yi, xi))  # 좌측 90도 회전 대칭
-
-  yi = [y, y, y, y+1]
-  xi = [x, x+1, x+2, x+2]
-  res.append(get_sum(yi, xi))  # 우측 90도 회전 대칭
-
-  return max(res)
-
-
-def d(y, x):
-  res = []
-  yi = [y, y+1, y+1, y+2]
-  xi = [x, x, x+1, x+1]
-  res.append(get_sum(yi, xi))  # 원본 == 상하 좌우 대칭
-
-  yi = [y, y+1, y+1, y+2]
-  xi = [x, x, x-1, x-1]
-  res.append(get_sum(yi, xi))  # 좌우 대칭 == 상하 대칭
-
-  yi = [y, y, y-1, y-1]
-  xi = [x, x+1, x+1, x+2]
-  res.append(get_sum(yi, xi))  # 좌측 90도 회전 == 우측 90도 회전
-
-  yi = [y, y, y+1, y+1]
-  xi = [x, x+1, x+1, x+2]  # 대칭 후 좌측 90도 회전 == 대칭 후 우측 90도 회전
-
-  return max(res)
-
-
-def e(y, x):
-  res = []
-  yi = [y, y, y, y+1]
-  xi = [x, x+1, x+2, x+1]
-  res.append(get_sum(yi, xi))  # 원본 == 볼록 아래
-
-  yi = [y, y, y, y-1]
-  xi = [x, x+1, x+2, x+1]
-  res.append(get_sum(yi, xi))  # 볼록 위
-
-  yi = [y, y-1, y, y+1]
-  xi = [x, x+1, x+1, x+1]
-  res.append(get_sum(yi, xi))  # 볼록 좌측
-
-  yi = [y, y-1, y, y+1]
-  xi = [x+1, x, x, x]
-  res.append(get_sum(yi, xi))  # 볼록 우측
-
-  return max(res)
-
-
-for i in range(N):
-  for j in range(M):
-    max_res = max(max_res, max([a(i, j), b(i, j), c(i, j), d(i, j), e(i, j)]))
-
-print(max_res)
+ans = 0
+for i in range(n):
+  for j in range(m):
+    go(i, j, 0, 0)
+    if j+2 < m:
+      temp = a[i][j] + a[i][j+1] + a[i][j+2]
+      if i-1 >= 0:
+        temp2 = temp + a[i-1][j+1]
+        if ans < temp2:
+          ans = temp2
+      if i+1 < n:
+        temp2 = temp + a[i+1][j+1]
+        if ans < temp2:
+          ans = temp2
+    if i+2 < n:
+      temp = a[i][j] + a[i+1][j] + a[i+2][j]
+      if j+1 < m:
+        temp2 = temp + a[i+1][j+1]
+        if ans < temp2:
+          ans = temp2
+      if j-1 >= 0:
+        temp2 = temp + a[i+1][j-1]
+        if ans < temp2:
+          ans = temp2
+print(ans)
