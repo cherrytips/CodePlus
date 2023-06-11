@@ -1,3 +1,4 @@
+# This code has been copied.
 from collections import deque
 n, m = map(int, input().split())
 after = list(range(101))

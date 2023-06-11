@@ -1,3 +1,4 @@
+# This code has been copied.
 import sys
 sys.setrecursionlimit(1500*1500)
 check = [[False]*1501 for _ in range(1501)]

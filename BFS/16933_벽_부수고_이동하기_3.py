@@ -1,3 +1,4 @@
+# This code has been copied.
 from collections import deque
 a = [[0]*1000 for _ in range(1000)]
 d = [[[[0]*2 for k in range(11)] for i in range(1000)] for j in range(1000)]

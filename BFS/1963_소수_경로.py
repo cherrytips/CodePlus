@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# This code has been copied.
 from collections import deque
 
 

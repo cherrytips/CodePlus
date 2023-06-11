@@ -1,3 +1,4 @@
+# This code has been copied.
 from collections import deque
 limit = 1000000000
 s, t = map(int, input().split())

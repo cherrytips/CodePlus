@@ -1,3 +1,4 @@
+# This code has been copied.
 from collections import deque
 import sys
 MAX = 10001
